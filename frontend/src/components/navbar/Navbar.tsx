@@ -2,11 +2,30 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import NavbarUtils from "./NavbarUtils";
-import { nav } from "@/lib/constants";
+import axios from "axios";
+import { categoryType } from "@/type/category";
+import NavList from "./NavList";
 
-export default function Navbar() {
+const getCategories = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/categories`,
+    );
+    return response.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return error.response;
+    } else {
+      return error;
+    }
+  }
+};
+
+export default async function Navbar() {
+  const categories: categoryType[] = await getCategories();
+
   return (
-    <header className="fixed top-0 z-10 flex h-20 w-full items-center bg-white">
+    <header className="fixed top-0 z-10 flex h-20 w-screen items-center bg-white">
       <div className="mx-auto flex h-full w-full max-w-screen-xl items-center justify-between px-4">
         <Link href="/">
           <div className="relative size-12 md:size-16">
@@ -18,17 +37,10 @@ export default function Navbar() {
             />
           </div>
         </Link>
-        <nav className="hidden h-full items-center gap-8 md:flex">
-          {nav.map((item, index) => (
-            <Link key={index} href="#" className="h-full">
-              <div className="group relative flex h-full cursor-pointer items-center text-xs font-bold text-black/80 lg:text-sm">
-                {item}
-                <div className="invisible absolute bottom-0 h-1 w-full bg-black group-hover:visible" />
-              </div>
-            </Link>
-          ))}
-        </nav>
-        <NavbarUtils nav={nav} />
+        <div className="flex h-full gap-8">
+          <NavList categories={categories} />
+          {categories && <NavbarUtils navList={categories} />}
+        </div>
       </div>
     </header>
   );

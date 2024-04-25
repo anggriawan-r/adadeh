@@ -1,41 +1,83 @@
-const nav = ["PRIA", "WANITA", "ANAK", "OLAHRAGA"] as const;
+export const protectedRoutes = ["/user", "/cart", "/wishlist", "/transaction"];
+export const loginRoutes = ["/auth/signin", "/auth/signup"];
+
+const nav = ["LIFESTYLE", "SPORTS", "OUTDOOR", "SLIDES", "ESSENTIALS"] as const;
 type navType = typeof nav;
 
 const products: productsType[] = [
   {
-    category: "Wanita Lifestyle",
+    id: 1,
+    category: "Lifestyle",
     name: "SANDAL MEHANA",
-    price: "Rp. 1.300.000",
-    image_url:
+    price: 1300000,
+    image:
       "https://www.adidas.co.id/media/catalog/product/i/g/ig3537_2_footwear_photography_side20lateral20view_grey.jpg",
   },
   {
-    category: "Wanita Lifestyle",
+    id: 2,
+    category: "Lifestyle",
     name: "SLIDES ADILETTE 22 XLG",
-    price: "Rp. 1.300.000",
-    image_url:
+    price: 1300000,
+    image:
       "https://www.adidas.co.id/media/catalog/product/i/e/ie5650_2_footwear_photography_side20lateral20view_grey.jpg",
   },
   {
-    category: "Wanita Lifestyle",
+    id: 3,
+    category: "Lifestyle",
     name: "SEPATU MULE ADIFOM STAN SMITH",
-    price: "Rp. 1.200.000",
-    image_url:
+    price: 1200000,
+    image:
       "https://www.adidas.co.id/media/catalog/product/i/e/ie0483_2_footwear_photography_side20lateral20view_grey.jpg",
   },
   {
-    category: "Wanita Lifestyle",
+    id: 4,
+    category: "Lifestyle",
     name: "SLIDES ADILETTE 22",
-    price: "Rp. 840.000",
-    image_url:
+    price: 840000,
+    image:
       "https://www.adidas.co.id/media/catalog/product/i/e/ie5645_2_footwear_photography_side20lateral20view_grey.jpg",
+  },
+  {
+    id: 5,
+    category: "Lifestyle",
+    name: "COUNTRY OG LOW TRAINERS",
+    price: 2200000,
+    image:
+      "https://www.adidas.co.id/media/catalog/product/i/d/id3545_2_footwear_photography_side20lateral20view_grey.jpg",
+  },
+  {
+    id: 6,
+    name: "SEPATU GAZELLE",
+    price: 1700000,
+    category: "Lifestyle",
+    image:
+      "https://www.adidas.co.id/media/catalog/product/b/b/bb5478_sl_ecom.jpg",
+  },
+  {
+    id: 7,
+    name: "SEPATU SUPERNOVA STRIDE",
+    price: 1900000,
+    category: "Running",
+    image:
+      "https://www.adidas.co.id/media/catalog/product/i/g/ig8317_2_footwear_photography_side20lateral20view_grey.jpg",
   },
 ];
 type productsType = {
+  id: number;
   category: string;
   name: string;
-  price: string;
-  image_url: string;
+  price: number;
+  image: string;
+};
+
+type detailProductType = {
+  stock: number;
+  id: number;
+  description: string;
+  category: string;
+  name: string;
+  price: number;
+  image: string;
 };
 
 const heroes = [
@@ -45,28 +87,69 @@ const heroes = [
       "https://www.adidas.co.id/media/scandiweb/slider/s/s/ss24-yeezy-hp-mh-500-stone-taupe-d.png",
     title: "YEZZY 500 STONE TAUPE",
     imageAlt: "YEZZY 500 STONE TAUPE",
-    buttonUrl: "#",
+    buttonUrl: "/catalogue",
     isButtonDark: true,
   },
   {
     id: 2,
-    imageUrl:
-      "https://www.adidas.co.id/media/scandiweb/slider/h/p/hp_glp_masthead_desktop_1920x720px_2.jpg",
-    title: "KOLEKSI ADADEH BALI",
-    imageAlt: "BALI",
-    buttonUrl: "#",
-    isButtonDark: false,
+    imageUrl: "/superbounce.webp",
+    title: "ULTRABOUNCE",
+    imageAlt: "ULTRABOUNCE",
+    buttonUrl: "/catalogue/56",
+    isButtonDark: true,
   },
   {
     id: 3,
-    imageUrl:
-      "https://www.adidas.co.id/media/scandiweb/slider/f/o/football-ss24-eurocopa-eurocopacombined-onsite-mh-d.jpg",
-    title: "KOLEKSI JERSEY ADADEH 2024",
-    imageAlt: "JERSEY",
-    buttonUrl: "#",
-    isButtonDark: false,
+    imageUrl: "/ultraboost.webp",
+    title: "ULTRABOOST",
+    imageAlt: "ULTRABOOST",
+    buttonUrl: "/catalogue/57",
+    isButtonDark: true,
   },
 ];
+const categories: Categories[] = [
+  {
+    id: 1,
+    name: "Lifestyle",
+    image_url:
+      "https://images.pexels.com/photos/2041832/pexels-photo-2041832.jpeg",
+  },
+  {
+    id: 4,
+    name: "Basket",
+    image_url:
+      "https://images.pexels.com/photos/220383/pexels-photo-220383.jpeg",
+  },
+  {
+    id: 3,
+    name: "Outdoor",
+    image_url:
+      "https://images.pexels.com/photos/2346018/pexels-photo-2346018.jpeg",
+  },
+];
+type Categories = {
+  name: string;
+  image_url: string;
+  id: number;
+};
+type categoriesType = {
+  name: string;
+  id: number;
+  image_url: string;
+};
 
-export { nav, products, heroes };
-export type { navType, productsType };
+type wishListType = {
+  id: number;
+  name: string;
+  stock: number;
+  price: number;
+  image: number;
+};
+export { nav, heroes, products, categories };
+export type {
+  wishListType,
+  navType,
+  productsType,
+  categoriesType,
+  detailProductType,
+};

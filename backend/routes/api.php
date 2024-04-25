@@ -3,8 +3,10 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DetailTransaksiController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\MetodePembayaranController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TransaksiController;
@@ -27,8 +29,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Auth
 Route::post("/login", [AuthController::class, "login"]);
 Route::post("/register", [AuthController::class, "register"]);
+Route::get("/customers", [AuthController::class, "customer"]);
 
 // Category
 Route::controller(CategoryController::class)->group(function () {
@@ -43,8 +47,21 @@ Route::controller(ProductController::class)->group(function () {
     Route::get("/products/{products}", "show");
 });
 
+// Payment
+Route::get("/payments", [PaymentController::class, "index"]);
+Route::post("/webhook/update-payment", [PaymentController::class, "updatePaymentWebhook"]);
+
 Route::group(['middleware' => ['auth:api']], function () {
-    // Role
+    // Payment
+    Route::post("/payments/buy", [PaymentController::class, "payment"]);
+    Route::patch("/payments/status/{payment}", [PaymentController::class, "updateStatus"]);
+    Route::patch("/payments/redirect", [PaymentController::class, "getQuery"]);
+
+    // History
+    Route::post("/histories", [HistoryController::class, "store"]);
+    Route::get("/histories", [PaymentController::class, "getHistory"]);
+
+    // Roles
     Route::controller(RoleController::class)->group(function () {
         Route::get("/roles", "index");
         Route::get("/roles/{roles}", "show");
@@ -64,24 +81,11 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::delete("/details-transaksi/{details-transaksi}", "destroy");
     });
 
-    // Category
-    Route::controller(CategoryController::class)->group(function () {
-        Route::post("/categories", "store");
-        Route::patch("/categories/{categories}", "update");
-        Route::delete("/categories/{categories}", "destroy");
-    });
-
-    // Product
-    Route::controller(ProductController::class)->group(function () {
-        Route::post("/products", "store");
-        Route::patch("/products/{products}", "update");
-        Route::delete("/products/{products}", "destroy");
-    });
-
     // Auth
     Route::controller(AuthController::class)->group(function () {
         Route::post("/logout", "logout");
-        Route::post("/change_password", "change_password");
+        Route::patch("/update-user", "update_user");
+        Route::patch("/reset-password/{id}", "resetPassword");
     });
 
     // Wishlist
@@ -96,4 +100,21 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::apiResource('/metode-pembayaran', MetodePembayaranController::class);
     Route::apiResource('/transaksi', TransaksiController::class);
     Route::apiResource('/keranjang', KeranjangController::class);
+
+    Route::get('/user/keranjang', [KeranjangController::class, 'showByUserId']);
+    Route::get('/user/transaksi', [TransaksiController::class, 'showByUserId']);
+
+    // Product
+    Route::controller(ProductController::class)->group(function () {
+        Route::post("/products", "store");
+        Route::patch("/products/{products}", "update");
+        Route::delete("/products/{products}", "destroy");
+    });
+
+    // Category
+    Route::controller(CategoryController::class)->group(function () {
+        Route::post("/categories", "store");
+        Route::patch("/categories/{categories}", "update");
+        Route::delete("/categories/{categories}", "destroy");
+    });
 });
